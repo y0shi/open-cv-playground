@@ -1,6 +1,7 @@
 # import the necessary packages
 from collections import deque
 from imutils.video import VideoStream
+from shapedetector import ShapeDetector
 import numpy as np
 import argparse
 import cv2
@@ -22,8 +23,8 @@ args = vars(ap.parse_args())
 # greenUpper = (64, 255, 255)
 # yellowLower = (25, 125, 125)
 # yellowUpper = (35, 255, 255)
-yellowLower = (25, 50, 50)
-yellowUpper = (55, 255, 255)
+yellowLower = (25, 65, 65)
+yellowUpper = (45, 255, 255)
 pts = deque(maxlen=args["buffer"])
 
 # if a video path was not supplied, grab the reference
@@ -71,6 +72,8 @@ while True:
 	cnts = imutils.grab_contours(cnts)
 	center = None
 
+	sd = ShapeDetector()
+
 	# only proceed if at least one contour was found
 	if len(cnts) > 0:
 		# for ever contour in the mask, use
@@ -82,15 +85,24 @@ while True:
 			center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
 
 			# only proceed if the radius meets a minimum size
-			if radius > 10:
+			if radius > 25:
 				# draw the circle and centroid on the frame,
 				# then update the list of tracked points
-				cv2.circle(frame, (int(x), int(y)), int(radius),
-					(0, 255, 255), 2)
+				# cv2.circle(frame, (int(x), int(y)), int(radius),
+				# 	(0, 255, 255), 2)
 				cv2.circle(frame, center, 5, (0, 0, 255), -1)
 
+				#shape detection:
+				shape = sd.detect(contour)
+
+				# multiply the contour (x, y)-coordinates by the resize ratio,
+				# then draw the contours and the name of the shape on the image
+				cv2.drawContours(frame, [contour], -1, (0, 255, 0), 2)
+				cv2.putText(frame, shape, (int(x), int(y)), cv2.FONT_HERSHEY_SIMPLEX,
+					0.5, (255, 255, 255), 2)
+			
 			# update the points queue
-			pts.appendleft(center)
+			#pts.appendleft(center)
 
 	# loop over the set of tracked points
 	# for i in range(1, len(pts)):
