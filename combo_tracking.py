@@ -23,8 +23,10 @@ args = vars(ap.parse_args())
 # greenUpper = (64, 255, 255)
 # yellowLower = (25, 125, 125)
 # yellowUpper = (35, 255, 255)
-yellowLower = (25, 65, 65)
-yellowUpper = (45, 255, 255)
+# yellowLower = (25, 65, 65)
+# yellowUpper = (45, 255, 255)
+orangeLower = (0, 110, 150)
+orangeUpper = (10, 255, 255)
 pts = deque(maxlen=args["buffer"])
 
 # if a video path was not supplied, grab the reference
@@ -62,7 +64,7 @@ while True:
 	# a series of dilations and erosions to remove any small
 	# blobs left in the mask
 	#mask = cv2.inRange(hsv, greenLower, greenUpper)
-	mask = cv2.inRange(hsv, yellowLower, yellowUpper)
+	mask = cv2.inRange(hsv, orangeLower, orangeUpper)
 	mask = cv2.erode(mask, None, iterations=2)
 	mask = cv2.dilate(mask, None, iterations=2)
 	# find contours in the mask and initialize the current
