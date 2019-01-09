@@ -21,9 +21,11 @@ args = vars(ap.parse_args())
 # greenLower = (29, 86, 6)
 # greenUpper = (64, 255, 255)
 # yellowLower = (25, 125, 125)
-# yellowUpper = (35, 255, 255)
-yellowLower = (25, 50, 50)
-yellowUpper = (55, 255, 255)
+# yellowUpper = (35, 255, 255
+# yellowLower = (25, 50, 50)
+# yellowUpper = (55, 255, 255)
+orangeLower = (0, 100, 100)
+orangeUpper = (10, 255, 255)
 pts = deque(maxlen=args["buffer"])
 
 # if a video path was not supplied, grab the reference
@@ -61,7 +63,7 @@ while True:
 	# a series of dilations and erosions to remove any small
 	# blobs left in the mask
 	#mask = cv2.inRange(hsv, greenLower, greenUpper)
-	mask = cv2.inRange(hsv, yellowLower, yellowUpper)
+	mask = cv2.inRange(hsv, orangeLower, orangeUpper)
 	mask = cv2.erode(mask, None, iterations=2)
 	mask = cv2.dilate(mask, None, iterations=2)
 	# find contours in the mask and initialize the current
@@ -82,7 +84,7 @@ while True:
 			center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
 
 			# only proceed if the radius meets a minimum size
-			if radius > 10:
+			if radius > 25:
 				# draw the circle and centroid on the frame,
 				# then update the list of tracked points
 				cv2.circle(frame, (int(x), int(y)), int(radius),
